@@ -212,9 +212,10 @@ def upload_crits(response, md5, cfg):
         if (inserted_sample and inserted_domain):
             url = "{srv}/api/v1/samples/{md5}/".format(srv=cfg.crits, md5=md5)
             relationship_data = {
+                'action': 'forge_relationship',
                 'right_type': domain_response_data['type'],
                 'right_id': domain_response_data['id'],
-                'rel_type': 'Downloaded_From',
+                'rel_type': 'Downloaded From',
                 'rel_confidence': 'high',
                 'rel_date': datetime.datetime.now()
             }
