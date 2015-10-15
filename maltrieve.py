@@ -221,7 +221,7 @@ def upload_crits(response, md5, cfg):
             }
             try:
                 # Note that this request does NOT go through proxies
-                relationship_response = requests.post(url, headers=headers, data=relationship_data, verify=False)
+                relationship_response = requests.patch(url, headers=headers, data=relationship_data, verify=False)
                 # pylint says "Instance of LookupDict has no 'ok' member"
                 if relationship_response.status_code != requests.codes.ok:
                     logging.info("Submitted relationship info for %s to CRITs, response was %r",
