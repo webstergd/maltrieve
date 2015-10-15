@@ -143,7 +143,9 @@ def upload_crits(response, md5, cfg):
         url_tag = urlparse(response.url)
         mime_type = magic.from_buffer(response.content, mime=True)
         files = {'filedata': (md5, response.content)}
-        headers = {'User-agent': 'Maltrieve'}
+        headers = {'User-agent': 'Maltrieve', 
+                   'Authorization': 'ApiKey {0}:{1}'.format(cfg.crits_user, cfg.crits_key),
+                   'Content-Type': 'application/x-www-form-urlencoded'}
         zip_files = ['application/zip', 'application/gzip', 'application/x-7z-compressed']
         rar_files = ['application/x-rar-compressed']
         inserted_domain = False
@@ -153,8 +155,6 @@ def upload_crits(response, md5, cfg):
         # TODO: identify if it is a domain or IP and submit accordingly
         url = "{srv}/api/v1/domains/".format(srv=cfg.crits)
         domain_data = {
-            'api_key': cfg.crits_key,
-            'username': cfg.crits_user,
             'source': cfg.crits_source,
             'domain': url_tag.netloc
         }
@@ -186,8 +186,6 @@ def upload_crits(response, md5, cfg):
         else:
             file_type = 'raw'
         sample_data = {
-            'api_key': cfg.crits_key,
-            'username': cfg.crits_user,
             'source': cfg.crits_source,
             'upload_type': 'file',
             'md5': md5,
@@ -211,16 +209,14 @@ def upload_crits(response, md5, cfg):
             logging.info("HTTP error when submitting sample %s to CRITs", md5)
 
         # Create a relationship for the sample and domain
-        url = "{srv}/api/v1/relationships/".format(srv=cfg.crits)
         if (inserted_sample and inserted_domain):
-            relationship_data = {
+            url = "{srv}/api/v1/samples/{md5}/".format(srv=cfg.crits, md5=md5)
                 'api_key': cfg.crits_key,
                 'username': cfg.crits_user,
-                'source': cfg.crits_source,
+
+            relationship_data = {
                 'right_type': domain_response_data['type'],
                 'right_id': domain_response_data['id'],
-                'left_type': sample_response_data['type'],
-                'left_id': sample_response_data['id'],
                 'rel_type': 'Downloaded_From',
                 'rel_confidence': 'high',
                 'rel_date': datetime.datetime.now()
