@@ -211,9 +211,6 @@ def upload_crits(response, md5, cfg):
         # Create a relationship for the sample and domain
         if (inserted_sample and inserted_domain):
             url = "{srv}/api/v1/samples/{md5}/".format(srv=cfg.crits, md5=md5)
-                'api_key': cfg.crits_key,
-                'username': cfg.crits_user,
-
             relationship_data = {
                 'right_type': domain_response_data['type'],
                 'right_id': domain_response_data['id'],
