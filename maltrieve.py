@@ -212,15 +212,16 @@ def upload_crits(response, md5, cfg):
         if (inserted_sample and inserted_domain):
             url = "{srv}/api/v1/samples/{md5}/".format(srv=cfg.crits, md5=md5)
             relationship_data = {
+                'action': 'forge_relationship',
                 'right_type': domain_response_data['type'],
                 'right_id': domain_response_data['id'],
-                'rel_type': 'Downloaded_From',
+                'rel_type': 'Downloaded From',
                 'rel_confidence': 'high',
                 'rel_date': datetime.datetime.now()
             }
             try:
                 # Note that this request does NOT go through proxies
-                relationship_response = requests.post(url, headers=headers, data=relationship_data, verify=False)
+                relationship_response = requests.patch(url, headers=headers, data=relationship_data, verify=False)
                 # pylint says "Instance of LookupDict has no 'ok' member"
                 if relationship_response.status_code != requests.codes.ok:
                     logging.info("Submitted relationship info for %s to CRITs, response was %r",
