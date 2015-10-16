@@ -144,8 +144,7 @@ def upload_crits(response, md5, cfg):
         mime_type = magic.from_buffer(response.content, mime=True)
         files = {'filedata': (md5, response.content)}
         headers = {'User-agent': 'Maltrieve', 
-                   'Authorization': 'ApiKey {0}:{1}'.format(cfg.crits_user, cfg.crits_key),
-                   'Content-Type': 'application/x-www-form-urlencoded'}
+                   'Authorization': 'ApiKey {0}:{1}'.format(cfg.crits_user, cfg.crits_key)}
         zip_files = ['application/zip', 'application/gzip', 'application/x-7z-compressed']
         rar_files = ['application/x-rar-compressed']
         inserted_domain = False
@@ -210,7 +209,7 @@ def upload_crits(response, md5, cfg):
 
         # Create a relationship for the sample and domain
         if (inserted_sample and inserted_domain):
-            url = "{srv}/api/v1/samples/{md5}/".format(srv=cfg.crits, md5=md5)
+            url = "{srv}/api/v1/samples/{samp_id}/".format(srv=cfg.crits, samp_id=sample_response['id'])
             relationship_data = {
                 'action': 'forge_relationship',
                 'right_type': domain_response_data['type'],
