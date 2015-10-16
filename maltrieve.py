@@ -209,7 +209,7 @@ def upload_crits(response, md5, cfg):
 
         # Create a relationship for the sample and domain
         if (inserted_sample and inserted_domain):
-            url = "{srv}/api/v1/samples/{samp_id}/".format(srv=cfg.crits, samp_id=sample_response['id'])
+            url = "{srv}/api/v1/samples/{samp_id}/".format(srv=cfg.crits, samp_id=sample_response_data['id'])
             relationship_data = {
                 'action': 'forge_relationship',
                 'right_type': domain_response_data['type'],
